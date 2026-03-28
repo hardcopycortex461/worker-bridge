@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, Provider } from '@angular/core'
-import { bootstrapWorker } from './bootstrap'
+import { bootstrapWorker } from '../bootstrap'
 
 export interface WorkerBridgeConfig {
   name?: string
